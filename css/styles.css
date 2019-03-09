@@ -18,20 +18,63 @@
 }
 
 /*teacher css page*/
-.manage-login-toolbar {
-  position: relative;
-  transform: translateX(95%);
-  background-color: red;
+.navigation {
+  background-color: lightgrey;
   margin: auto;
   margin-bottom: 10px;
   padding: 20px;
 }
 
-.welcome-teacher {
+li {
+  display: inline;
+}
 
+#navigation-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.welcome-teacher {
+  display: block;
+  background-color: blue;
+  color: white;
+}
+
+.row {
+  display: flex;
+  height: 100%;
+}
+.exam-editor {
+  background-color: gray;
+  height: 100%;
+  width: 50%;
+  display: block;
+}
+#question-bank {
+  display: block;
+}
+
+#create-question {
+  display: none;
+}
+
+#submit-question {
+  position: relative;
+  float: right;
+  left: 0;
+  bottom: 0;
 }
 
 .exam-preview {
+  background-color: cyan;
+  flex: 50%;
+  height: 100%;
+}
+
+#refresh-preview {
   position: relative;
   float: right;
+  right: 0;
+  transform: translateY(-80px);
 }
