@@ -3,13 +3,14 @@
   ini_set('display_errors', 1);
 
   //globals
-  $url = 'https://web.njit.edu/~hy276/beta/back.php';
+  $url = 'https://web.njit.edu/~jmd35/beta/login.php';
   $usr = $_POST['username'];
   $pw = $_POST['password'];
   $postData = [
     "username" => "$usr",
     "password" => "$pw",
   ];
+  $postData = json_encode($postData);
   $login_opts = [
     CURLOPT_URL => $url,
     CURLOPT_RETURNTRANSFER => 1,
@@ -18,8 +19,7 @@
     CURLOPT_FOLLOWLOCATION => 1,
   ];
 
-
-  echo "<script>console.log('username=" . $usr . " password=" . $pw . "')</script>";
+  //echo "<script>console.log('username=" . $usr . " password=" . $pw . "')</script>";
 
   //curl setup
   $ch = curl_init();
@@ -29,7 +29,7 @@
   $result = curl_exec($ch);
 
   if ($result === false) {
-    echo "<script>console.log('curl error:". curl_error($ch) . "')</script>";
+    die('request failed');
   }
 
   curl_close($ch);
