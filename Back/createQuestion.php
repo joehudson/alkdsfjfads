@@ -38,17 +38,32 @@
 
   $query = "INSERT INTO `question_bank` (`question_text`, `topic`, `difficulty`, `input1`, `output1`, `input2`, `output2`) VALUES ('$question_text', '$topic', '$difficulty', '$input1', '$output1', '$input2', '$output2')";
   
-
+   $itWorked = false;
   
   if ($result = mysqli_query($conn, $query)) { //checks if the query worked
-      echo "<script>console.log('query worked')</script>";
+      //echo "<script>console.log('query worked')</script>";
+      $itWorked = true;
   }
   
-  else {
-      echo "<script>console.log('Something went wrong')</script>";
-    }
+  //else {
+    //  echo "<script>console.log('Something went wrong')</script>";
+    //}
+   //creating json to send back
+   
+  if (!isset($login_json)) {
+    $login_json = new stdClass();
+  }
+  if ($itWorked) {
+    
+    $login_json->msg = "question added";
+  }
   
+  else if ($itWorked === false) {
+   
+    $login_json->msg = "not added";
+  }
+  $login_json = json_encode($login_json, true);
+  echo $login_json;
   mysqli_close($conn);
-  
 
 ?>
