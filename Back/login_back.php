@@ -4,11 +4,15 @@
   ini_set('display_errors', 1);
 
   //test that the connection and info sent correctly
-  echo "<script>console.log('Curled to back')</script>";
+  //echo "<script>console.log('Curled to back')</script>";
   //print_r($_POST);
 
-  $usr = $_POST['username'];
-  $pw = $_POST['password'];
+  $loginData = file_get_contents('php://input');
+
+  $loginData = json_decode($loginData, true);
+
+  $usr = $loginData['username'];
+  $pw = $loginData['password'];
 
   //echo "<script>console.log('username=" . $usr . " password=" . $pw . "')</script>";
 
@@ -46,53 +50,56 @@
   $isValid = false;
 
   if ($res_login_query = mysqli_query($conn, $login_query)) { //checks if the query worked
-      echo "<script>console.log('query for login credentials work')</script>";
+      //echo "<script>console.log('query for login credentials work')</script>";
   }
   if ( (mysqli_num_rows($res_login_query = mysqli_query($conn, $student_login_query))) > 0) { //checks if student ucid is used
-    echo "<script>console.log('student tried to log in')</script>";
+    //echo "<script>console.log('student tried to log in')</script>";
     $isStudent = true;
     if (password_verify($pw, $studentHash)) {
-      echo "<script>console.log('password valid')</script>";
+      //echo "<script>console.log('password valid')</script>";
       $isValid = true;
     }
     else {
-      echo "<script>console.log('password invalid')</script>";
+      //echo "<script>console.log('password invalid')</script>";
     }
   }
   else if ( (mysqli_num_rows($res_login_query = mysqli_query($conn, $teacher_login_query))) > 0) { //checks if teacher ucid is used
-      echo "<script>console.log('teacher tried to log in')</script>";
+      //echo "<script>console.log('teacher tried to log in')</script>";
       $isTeacher = true;
       if (password_verify($pw, $teacherHash)) {
-        echo "<script>console.log('password valid')</script>";
+        //echo "<script>console.log('password valid')</script>";
         $isValid = true;
       }
       else {
-        echo "<script>console.log('password invalid')</script>";
+        //echo "<script>console.log('password invalid')</script>";
       }
     }
   else {
-    echo "<script>console.log('someone not in the DB tried to log in')</script>";
+    //echo "<script>console.log('someone not in the DB tried to log in')</script>";
   }
 
   //creating json to send back
-  /*if ($isStudent and $isValid) {
-    $login_json = [
-    [
-      whoami => 'student',
-      msg => 'valid login'
-    ]
-  ];
+  if (!isset($login_json)) {
+    $login_json = new stdClass();
   }
 
-  else if ($isTeacher and $isValid) {
-    $login_json = [
-      [
-        whoami = 'teacher',
-        msg => 'valid login'
-      ]
-    ]
+  if ($isStudent && $isValid) {
+    $login_json->whoami = "student";
+    $login_json->msg = "valid login";
   }
-  */
+  else if ($isTeacher && $isValid) {
+    $login_json->whoami = "teacher";
+    $login_json->msg = "valid login";
+  }
+  else if ($isValid === false) {
+    //$login_json->whoami = "null";
+    $login_json->msg = "invalid login";
+  }
+
+  $login_json = json_encode($login_json, true);
+
+  echo $login_json;
+
   mysqli_close($conn);
 
 ?>
