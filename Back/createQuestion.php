@@ -13,6 +13,8 @@
   }
   
   $getdata = file_get_contents('php://input');
+  
+  
   $array  = json_decode($getdata,true);
   
   /*$array = ["question_text" => "Hello",
@@ -27,6 +29,7 @@
   
   
   $question_text    = $array['question_text'];
+  $parameters       = $array['parameters'];
   $topic            = $array['topic'];
   $difficulty       = $array['difficulty'];
   $input1           = $array['input1'];
@@ -36,11 +39,11 @@
   
   
 
-  $query = "INSERT INTO `question_bank` (`question_text`, `topic`, `difficulty`, `input1`, `output1`, `input2`, `output2`) VALUES ('$question_text', '$topic', '$difficulty', '$input1', '$output1', '$input2', '$output2')";
+  $query = "INSERT INTO `question_bank` (`question_text`, `parameters`, `topic`, `difficulty`, `input1`, `output1`, `input2`, `output2`) VALUES ('$question_text','$parameters', '$topic', '$difficulty', '$input1', '$output1', '$input2', '$output2')";
   
    $itWorked = false;
   
-  if ($result = mysqli_query($conn, $query)) { //checks if the query worked
+  if ($response = mysqli_query($conn, $query)) { //checks if the query worked
       //echo "<script>console.log('query worked')</script>";
       $itWorked = true;
   }
