@@ -3,12 +3,42 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$postData = file_get_contents('php://input');
+  $topic = $_POST['topic'];
+  $question_text = $_POST['question_text'];
+  $difficulty = $_POST['difficulty'];
+  $paramters = $_POST['parameters'];
+  $input1 = $_POST['input1'];
+  $output1 = $_POST['output1'];
+  $input2 = $_POST['input2'];
+  $output2 = $_POST['output2'];
 
-//echo "<script>console.log($postData)</script>";
+  $postData = [
+    "topic" => "$topic",
+    "question_text" => "$question_text",
+    "difficulty" => "$difficulty",
+    "parameters" => "$paramters",
+    "input1" => "$input1",
+    "output1" => "$output1",
+    "input2" => "$input2",
+    "output2" => "$output2",
+  ];
 
-//$url = 'https://web.njit.edu/~jmd35/beta/login.php';
-$url = 'https://web.njit.edu/~hy276/beta/teacher_back.php';
+  var_dump($postData);
+  /*
+  /*$postData = [
+    "topic" => "$_POST['topic']",
+    "question_text" => "$_POST['question_text']",
+    "difficulty" => "$_POST['difficulty']",
+    "parameters" => "$paramters",
+    "input1" => "$input1",
+    "output1" => "$output1",
+    "input2" => "$input2",
+    "output2" => "$output2"
+  ];*/
+
+$url = 'https://web.njit.edu/~jmd35/beta/createQuestion.php';
+//$url = 'https://web.njit.edu/~hy276/beta/back/createQuestion.php';
+
 $postData = json_encode($postData);
 
 $opts = [
@@ -16,7 +46,7 @@ $opts = [
   CURLOPT_RETURNTRANSFER => 1,
   CURLOPT_FOLLOWLOCATION => 1,
   CURLOPT_POST => 1,
-  CURLOPT_POSTFIELDS => $postData,
+  CURLOPT_POSTFIELDS => $postData
 ];
 
 $ch = curl_init();
@@ -33,16 +63,6 @@ curl_close($ch);
 
 echo $result;
 
-//handle create a question form
-/*$createQuestionForm = [
-  "questionTopic" => $postData['question-topic'],
-  "question" => $postData['question'],
-  "questionDifficulty" => $postData['question-difficulty'],
-  "functionParams" => $postData['function-params'],
-  ""
-]; */
-
-//echo "<script>console.log($createQuestionForm)</script>";
 
 
 
