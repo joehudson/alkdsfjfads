@@ -94,73 +94,6 @@ function showQuestionTblChecks() {
   request.send();
 }
 
-function handleCheck() {
-  //if a box is checked, loop through the row and put it into some post data to send
-  var table = document.getElementById('addQuestionTbl');
-  var rowCount = table.rows.length;
-  var chkCount = 0;
-  var dataObj = {};
-  var dataArr = [];
-
-  for (var i = 1; i < rowCount; i++) { //loops through the entire row length
-    var row = table.rows[i];
-    var chkbox = row.cells[0].childNodes[1];
-    if (chkbox.checked) { //get data if box was checked
-      chkCount++;
-      for (var j = 1; j < row.cells.length; j+=5) {
-        var dataCell = row.cells[j].innerHTML;
-        dataArr.push(dataCell);
-      }
-    }
-    if (i <= chkCount) {
-      dataObj[i] = dataArr;
-      dataArr = [];
-    }
-  }
-
-  var postData = dataObj;
-
-
-  postData = JSON.stringify(postData);
-  //console.log(postData);
-  dataArr = [];
-
-  const request = new XMLHttpRequest();
-
-  request.onload = function() {
-    let responseObj = null;
-
-    try {
-      responseObj = JSON.parse(request.responseText);
-    } catch (e) {
-      console.error('could not parse json');
-      console.log("response: " + request.responseText);
-    }
-    if (responseObj) {
-      console.log('handling response');
-      handleResponse(responseObj);
-    }
-  };
-
-  request.open('POST', 'submitQuestion.php');
-  request.setRequestHeader('Content-type', 'application/json');
-  console.log('original postdata ' + postData);
-  request.send(postData);
-
-  function handleResponse(responseObj) {
-   if (responseObj.msg == 'question insert ok') {
-      console.log('question added');
-      alert('question was added!');
-    }
-    if (responseObj.msg == 'question insert failed') {
-      console.log('not added' + request.responseText);
-    }
-    else {
-      console.error('json couldnt be handled: ' + responseObj);
-    }
-  };
-}
-
 function addQuestionToExam() {
   const form = {
     qid: document.getElementById('qid'),
@@ -169,13 +102,13 @@ function addQuestionToExam() {
     top: document.getElementById('top'),
     diff: document.getElementById('diff')
   }
-  var table = document.getElementsByTagName('table');
+  var table = document.getElementById('addQuestionTbl');
   var rowCount = table.rows.length;
   var chkCount = 0;
   var dataObj = {};
   var dataArr = [];
   var requestData = "";
-  var tblElements = table.getElementsByTagName('td')['qid'];
+  var count = 1;
 
   for (var i = 1; i < rowCount; i++) { //loops through the entire row length
     var row = table.rows[i];
@@ -183,16 +116,17 @@ function addQuestionToExam() {
     if (chkbox.checked) { //get data if box was checked
       chkCount++;
       for (var j = 1; j < row.cells.length; j+=5) {
-        var dataCell = tblElements[j];
-        console.log(dataCell);
+        var dataCell = row.cells[j].innerHTML;
+        //console.log(dataCell);
+        //data cell holds the qids from the table(is dynamic)
       }
     }
-    if (i <= chkCount) {
+    if (i <= chkCount) { //urlencodes the qids got from the table
       if (i >= 2) {
-        requestData += `&qid=${form.qid.innerHTML}`;
+        requestData += `&qid${i}=${dataCell}`;
       }
       else {
-        requestData += `qid=${form.qid.innerHTML}`;
+        requestData += `qid${i}=${dataCell}`;
       }
     }
   }
@@ -214,20 +148,20 @@ function addQuestionToExam() {
     }
   };
 
-  request.open('POST', 'test.php');
-  request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');console.log('original postdata ' + request);
-  request.send(requestData);
+  request.open('POST', 'submitQuestion.php');
+  request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  request.send(requestData); //will send something like this: qid1=1&qid2=23 and so on, which will be easily encoded as a json
 
   function handleResponse(responseObj) {
-    if (responseObj.msg == 'question insert ok') {
-       console.log('question added');
-       alert('question was added!');
-     }
-     if (responseObj.msg == 'question insert failed') {
-       console.log('not added' + request.responseText);
-     }
-     else {
-       console.error('json couldnt be handled: ' + responseObj);
-     }
+   if (responseObj.msg == 'question insert ok') {
+      console.log('question added');
+      alert('question was added!');
+    }
+    if (responseObj.msg == 'question insert failed') {
+      console.log('not added' + request.responseText);
+    }
+    else {
+      console.error('json couldnt be handled: ' + responseObj);
+    }
   };
 }
