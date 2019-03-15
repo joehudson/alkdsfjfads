@@ -5,16 +5,21 @@ ini_set('display_errors', 1);
 
 //needs to be directed to mid
 $url = 'http://web.njit.edu/~hy276/beta/back/submitQuestion.php';
+//$url = 'http://web.njit.edu/~hy276/beta/back/test.php';
 //$url = 'http://web.njit.edu/~jmd35/beta/mid/submitQuestion.php';
 
-$getData = file_get_contents('php://input');
+$getData = $_POST;
+
+$send = json_encode($getData, true);
+
+//var_dump($send);
 
 $opts = [
   CURLOPT_URL => $url,
   CURLOPT_RETURNTRANSFER => 1,
   CURLOPT_FOLLOWLOCATION => 1,
   CURLOPT_POST => 1,
-  CURLOPT_POSTFIELDS => $getData
+  CURLOPT_POSTFIELDS => $send,
 ];
 
 $ch = curl_init();
