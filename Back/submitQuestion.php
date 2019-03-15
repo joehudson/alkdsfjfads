@@ -1,21 +1,27 @@
 <?php
+//back
+error_reporting(E_ALL);
 
-function loop($array) {
-  for ($i = 1; $i < $length; $i+=6) {
-    foreach ($getData as $item) {
-      $id = $items[$i];
-      }
-    }
-    return $id;
+$getData = array();
+
+$array = file_get_contents("php://input");
+
+var_dump($array); //array is just NULL here, so I cant do anything with the input
+
+$getData = json_decode($array, true);
+
+
+if (!isset($test)) {
+  $test = new stdClass();
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+$test->response = $getData;
+$test->msg = "question insert failed";
+$test = json_encode($test);
 
-$getData = file_get_contents('php://input');
+echo $test;
 
-$getData = json_decode($getData, true);
-
+/*
 $dbhost = "sql1.njit.edu";
 $dbuser = "hy276";
 $dbpass = "HY9Co7Qkq";
@@ -27,13 +33,12 @@ if (!$conn) {
   die("Cannot connect to DB: " . mysqli_connect_error());
 }
 
-$id;
 $itWorked = false;
 $length = count($getData);
 
 for ($i = 1; $i < $length; $i+=6) {
   foreach ($getData as $item) {
-    $GLOBALS['id'] = $item[$i];
+    $id = $items[i];
 
     $query = "INSERT INTO `exams` (`question_id`) VALUES ('$id')";
 
@@ -57,7 +62,7 @@ if ($itWorked === false) {
   $query_json->msg = "question insert failed";
 }
 
-$query_json = json_encode($query_json, true);
+$query_json = json_encode($query_json);
 
 echo $query_json;
 
