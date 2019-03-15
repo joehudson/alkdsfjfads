@@ -39,8 +39,8 @@
     "output2" => "$output2",
   ];
 
-//$url = 'https://web.njit.edu/~jmd35/beta/createQuestion.php';
-$url = 'https://web.njit.edu/~hy276/beta/back/createQuestion.php';
+$url = 'https://web.njit.edu/~jmd35/beta/createQuestion.php';
+//$url = 'https://web.njit.edu/~hy276/beta/back/createQuestion.php';
 //$url = 'https://web.njit.edu/~hy276/beta/front/test.php';
 
 $postData = json_encode($postData);
