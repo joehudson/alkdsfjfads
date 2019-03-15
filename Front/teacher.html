@@ -10,13 +10,13 @@
     <div class="navigation">
       <ul id="navigation-list">
         <li id="make-exam-nav">
-          <a href="javascript:SwapDivs('create-question','create-exam')">Create Question</a>
+          <button type="button" onclick="SwapDivs('create-question', 'create-exam');SwapDivs('question-databank', 'exam-preview');display('submit-question-wrapper')">Create Question</button>
         </li>
         <li id="create-question-nav">
-          <a href="javascript:SwapDivs('question-databank','exam-preview')">Question Data bank</a>
+          <button type="button" onclick="SwapDivs('exam-preview', 'question-databank');SwapDivs('create-exam', 'create-question');">Create Exam</button>
         </li>
-        <!-- possible solution to create different buttons to set all but it's columns divs to none to change divs -->
         <li><a href="exams.html">Current Exams</a></li>
+        <li><a href="releaseGrades.html">Release Grades</a></li>
         <li><a href="login.html">Logout</a></li>
       </ul>
     </div>
@@ -30,8 +30,10 @@
       <!-- will be create question and adding questions via nav bar -->
         <div id="create-question">
           <h3>create a question</h3>
-            <label for="topic">Question Topic:</label><br>
+            <label for="topic">Question Topic</label><br>
             <input type="text" id="topic" autocomplete="off" required><br>
+            <label for="question_name">Question Name</label><br>
+            <input type="text" id="question_name" autocomplete="off" required><br>
             <label for="question_text">Question</label><br>
             <input type="text" id="question_text" autocomplete="off" required><br>
             <label for="difficulty">question difficulty</label><br>
@@ -41,8 +43,6 @@
               <option value="medium">medium</option>
               <option value="hard">hard</option>
             </select><br>
-            <label for="parameters">Function parameters</label><br>
-            <input type="text" id="parameters" autocomplete="off" required><br>
             <label for="input1">Test input 1</label><br>
             <input type="text" id="input1" autocomplete="off" required><br>
             <label for="output1">Expected output 1</label><br>
@@ -53,10 +53,11 @@
             <input type="text" id="output2" autocomplete="off" required><br>
             <button type="button" id="submit-question" onclick="return submitQuestion()">Submit question</button>
     </div>
-    <div id="create-exam" onload="return highlight()">
-      <h3>Add questions to exam</h3>
-  </div>
-  <button type="submit" id="submit-exam" onclick="handleCheck()">Submit</button>
+    <div id="create-exam">
+    </div>
+    <div id="submit-exam-wrapper">
+      <button type="submit" id="submit-exam" onclick="handleCheck()">Submit</button>
+    </div>
 </div>
     <!-- right column -->
     <div id="question-databank">
@@ -80,6 +81,9 @@
     </div>
     <div id="exam-preview">
       <h1>Exam Preview</h1>
+      <div id="preview-table">
+
+      </div>
     </div>
 </div>
     <script type="text/javascript" src="js/teacher.js">
