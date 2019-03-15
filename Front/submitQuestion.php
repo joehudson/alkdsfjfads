@@ -4,9 +4,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 //needs to be directed to mid
-$url = 'http://web.njit.edu/~hy276/beta/back/submitQuestion.php';
+//$url = 'http://web.njit.edu/~hy276/beta/back/submitQuestion.php';
 //$url = 'http://web.njit.edu/~hy276/beta/back/test.php';
-//$url = 'http://web.njit.edu/~jmd35/beta/mid/submitQuestion.php';
+$url = 'http://web.njit.edu/~jmd35/beta/mid/submitQuestion.php';
 
 $getData = $_POST;
 
