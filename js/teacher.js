@@ -78,8 +78,7 @@ function showQuestions() {
   const request = new XMLHttpRequest();
 
   request.onload = function () {
-    document.getElementById('question-table').innerHTML = this.responseText;
-    //console.log('loaded showQuestions function');
+    document.getElementById('question-table').innerHTML += this.responseText;
   };
   request.open("get", "getQuestionBank.php");
   request.send();
@@ -89,8 +88,7 @@ function showQuestionTblChecks() {
   const request = new XMLHttpRequest();
 
   request.onload = function () {
-    document.getElementById('create-exam').innerHTML = this.responseText;
-    //console.log('loaded addQuestionBank function');
+    document.getElementById('create-exam').innerHTML += this.responseText;
   };
   request.open("get", "showQuestionTblChecks.php");
   request.send();
@@ -98,9 +96,6 @@ function showQuestionTblChecks() {
 
 function handleCheck() {
   //if a box is checked, loop through the row and put it into some post data to send
-  const form = {
-    submit: document.getElementById('submit-exam')
-  };
   var table = document.getElementById('addQuestionTbl');
   var rowCount = table.rows.length;
   var chkCount = 0;
@@ -112,7 +107,7 @@ function handleCheck() {
     var chkbox = row.cells[0].childNodes[1];
     if (chkbox.checked) { //get data if box was checked
       chkCount++;
-      for (var j = 1; j < row.cells.length; j++) {
+      for (var j = 1; j < row.cells.length; j+=5) {
         var dataCell = row.cells[j].innerHTML;
         dataArr.push(dataCell);
       }
@@ -124,6 +119,8 @@ function handleCheck() {
   }
 
   var postData = dataObj;
+
+
   postData = JSON.stringify(postData);
   //console.log(postData);
   dataArr = [];
@@ -137,7 +134,7 @@ function handleCheck() {
       responseObj = JSON.parse(request.responseText);
     } catch (e) {
       console.error('could not parse json');
-      console.log("response: " + request.responseText.toString());
+      console.log("response: " + request.responseText);
     }
     if (responseObj) {
       console.log('handling response');
@@ -146,8 +143,8 @@ function handleCheck() {
   };
 
   request.open('POST', 'submitQuestion.php');
-  request.setRequestHeader("Content-Type", "application/json");
-  console.log(postData);
+  request.setRequestHeader('Content-type', 'application/json');
+  console.log('original postdata ' + postData);
   request.send(postData);
 
   function handleResponse(responseObj) {
@@ -164,26 +161,73 @@ function handleCheck() {
   };
 }
 
-function moveQuestions() {
-  var table = document.getElementById('addQuestionTbl');
+function addQuestionToExam() {
+  const form = {
+    qid: document.getElementById('qid'),
+    qname: document.getElementById('qname'),
+    qtext: document.getElementById('qtext'),
+    top: document.getElementById('top'),
+    diff: document.getElementById('diff')
+  }
+  var table = document.getElementsByTagName('table');
   var rowCount = table.rows.length;
   var chkCount = 0;
   var dataObj = {};
   var dataArr = [];
+  var requestData = "";
+  var tblElements = table.getElementsByTagName('td')['qid'];
 
   for (var i = 1; i < rowCount; i++) { //loops through the entire row length
-    var row = table.rows[i]; //get the i row
-    var chkbox = row.cells[0].childNodes[1]; //get check boxes
+    var row = table.rows[i];
+    var chkbox = row.cells[0].childNodes[1];
     if (chkbox.checked) { //get data if box was checked
       chkCount++;
-      for (var j = 1; j < row.cells.length; j++) { //find the question ids
-        var dataCell = row.cells[j].innerHTML;
-        dataArr.push(dataCell);
+      for (var j = 1; j < row.cells.length; j+=5) {
+        var dataCell = tblElements[j];
+        console.log(dataCell);
       }
-      if (i <= chkCount) {
-        dataObj[i] = dataArr;
-        dataArr = [];
+    }
+    if (i <= chkCount) {
+      if (i >= 2) {
+        requestData += `&qid=${form.qid.innerHTML}`;
+      }
+      else {
+        requestData += `qid=${form.qid.innerHTML}`;
       }
     }
   }
+  console.log(requestData);
+  const request = new XMLHttpRequest();
+
+  request.onload = function() {
+    let responseObj = null;
+
+    try {
+      responseObj = JSON.parse(request.responseText);
+    } catch (e) {
+      console.error('could not parse json');
+      console.log("response: " + request.responseText);
+    }
+    if (responseObj) {
+      console.log('handling response');
+      handleResponse(responseObj);
+    }
+  };
+
+  request.open('POST', 'test.php');
+  request.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');console.log('original postdata ' + request);
+  request.send(requestData);
+
+  function handleResponse(responseObj) {
+    if (responseObj.msg == 'question insert ok') {
+       console.log('question added');
+       alert('question was added!');
+     }
+     if (responseObj.msg == 'question insert failed') {
+       console.log('not added' + request.responseText);
+     }
+     else {
+       console.error('json couldnt be handled: ' + responseObj);
+     }
+  };
 }
