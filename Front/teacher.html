@@ -53,10 +53,10 @@
             <input type="text" id="output2" autocomplete="off" required><br>
             <button type="button" id="submit-question" onclick="return submitQuestion()">Submit question</button>
     </div>
-    <div id="create-exam">
+    <div id="create-exam" onload="addFields()">
     </div>
     <div id="submit-exam-wrapper">
-      <button type="submit" id="submit-exam" onclick="handleCheck()">Submit</button>
+      <button type="submit" id="submit-exam" onclick="addQuestionToExam()">Submit</button>
     </div>
 </div>
     <!-- right column -->
