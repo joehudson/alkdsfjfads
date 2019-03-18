@@ -64,6 +64,9 @@ li {
 #create-exam { /*shows up first when laoded*/
   display: block;
 }
+#submit-question {
+  display: block;
+}
 
 #submit-exam {
   float: right;
@@ -83,6 +86,9 @@ li {
   background-color: cyan;
   flex: 50%;
   height: 100%;
+}
+#submitQuestionPlaceholder {
+  display: none;
 }
 
 table {
