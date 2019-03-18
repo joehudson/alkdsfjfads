@@ -78,7 +78,7 @@ function showQuestions() {
   const request = new XMLHttpRequest();
 
   request.onload = function () {
-    document.getElementById('question-table').innerHTML += this.responseText;
+    document.getElementById('question-table').innerHTML = this.responseText;
   };
   request.open("get", "getQuestionBank.php");
   request.send();
@@ -88,7 +88,7 @@ function showQuestionTblChecks() {
   const request = new XMLHttpRequest();
 
   request.onload = function () {
-    document.getElementById('create-exam').innerHTML += this.responseText;
+    document.getElementById('create-exam').innerHTML = this.responseText;
   };
   request.open("get", "showQuestionTblChecks.php");
   request.send();
@@ -96,6 +96,8 @@ function showQuestionTblChecks() {
 
 function addQuestionToExam() {
   const form = {
+    exam_name: document.getElementById('exam_name'),
+    points: document.getElementById('points'),
     qid: document.getElementById('qid'),
     qname: document.getElementById('qname'),
     qtext: document.getElementById('qtext'),
@@ -105,8 +107,6 @@ function addQuestionToExam() {
   var table = document.getElementById('addQuestionTbl');
   var rowCount = table.rows.length;
   var chkCount = 0;
-  var dataObj = {};
-  var dataArr = [];
   var requestData = "";
   var count = 1;
 
@@ -115,21 +115,26 @@ function addQuestionToExam() {
     var chkbox = row.cells[0].childNodes[1];
     if (chkbox.checked) { //get data if box was checked
       chkCount++;
-      for (var j = 1; j < row.cells.length; j+=5) {
-        var dataCell = row.cells[j].innerHTML;
+      for (var j = 2; j < row.cells.length; j+=7) {
+        var qid = row.cells[j].innerHTML;
         //console.log(dataCell);
         //data cell holds the qids from the table(is dynamic)
+      }
+      for (var j = 1; j < row.cells.length; j+=7) {
+	var points = row.cells[j].children[0].value;	
+	//console.log('score ' + score);
       }
     }
     if (i <= chkCount) { //urlencodes the qids got from the table
       if (i >= 2) {
-        requestData += `&qid${i}=${dataCell}`;
+        requestData += `&qid${i}=${qid}&points${i}=${points}`;
       }
       else {
-        requestData += `qid${i}=${dataCell}`;
+        requestData += `qid${i}=${qid}&points${i}=${points}`;
       }
     }
   }
+  requestData += `&exam_name=${form.exam_name.value}`;
   console.log(requestData);
   const request = new XMLHttpRequest();
 
@@ -153,15 +158,19 @@ function addQuestionToExam() {
   request.send(requestData); //will send something like this: qid1=1&qid2=23 and so on, which will be easily encoded as a json
 
   function handleResponse(responseObj) {
-   if (responseObj.msg == 'question insert ok') {
-      console.log('question added');
-      alert('question was added!');
+   if (responseObj.msg == 'exam added') {
+      alert('exam added!');
     }
-    if (responseObj.msg == 'question insert failed') {
-      console.log('not added' + request.responseText);
+    if (responseObj.msg == 'not added') {
+      //console.log('not added' + request.responseText);
+      alert('exam failed to add!');
     }
     else {
       console.error('json couldnt be handled: ' + responseObj);
     }
   };
+}
+
+function addFields() {
+
 }
