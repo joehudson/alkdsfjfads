@@ -172,8 +172,7 @@ $getData = file_get_contents('php://input');
 
 $array  = json_decode($getdata,true);
 $exam_name = $array;
- 
-$getData = json_encode($getData, true);             
+           
             
 $testData = getGradingData($getData,$gradingData_url);
   
